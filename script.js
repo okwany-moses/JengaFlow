@@ -12,20 +12,22 @@
 const CONFIG = {
   // BUSINESS CONTACT DETAILS
   // --------------------------------------------------------------------------
-  // Enter your official business WhatsApp number in international format
-  // WITHOUT spaces, dashes, or the '+' sign.
-  // Example for Kenya (+254): "254712345678"
-  // Set to empty string "" or leave as placeholder to trigger the configuration guide in development.
-  WHATSAPP_NUMBER: "254700000000",
+  // Official business WhatsApp number in international format: +254741067333
+  WHATSAPP_NUMBER: "254741067333",
 
   // Official contact email address
-  CONTACT_EMAIL: "contact@jengaflowsolutions.tech",
+  CONTACT_EMAIL: "info@jengaflowsolutions.tech",
 
   // Business Phone display format
-  PHONE_DISPLAY: "+254 (0) 700 000 000",
+  PHONE_DISPLAY: "+254 741 067 333",
 
-  // Physical / Regional Base
-  LOCATION: "Nairobi, Kenya & Serving Clients Globally",
+  // Founder & Technical Lead
+  FOUNDER_NAME: "Moses Otieno Okwany",
+  FOUNDER_ROLE: "Founder & Lead Developer",
+  FOUNDER_PHOTO_URL: "photo.jpg", // Path or hosted URL to official founder photo
+
+  // Physical / Regional Base & Remote Service
+  LOCATION: "Kadongo, Homa Bay, Kenya (and serving clients remotely worldwide)",
 
   // (Optional) Formspree or custom form submission endpoint.
   // Leave empty "" to use the built-in direct WhatsApp & email dispatch.
@@ -888,11 +890,22 @@ function initDynamicYear() {
   }
 }
 
+/**
+ * Founder Photo Initializer
+ */
+function initFounderPhoto() {
+  const img = document.getElementById("founder-photo-img");
+  if (img && CONFIG.FOUNDER_PHOTO_URL) {
+    img.src = CONFIG.FOUNDER_PHOTO_URL;
+  }
+}
+
 /* ==========================================================================
    Application Initialization
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   initDynamicYear();
+  initFounderPhoto();
   initCurrencySelector();
   initPricingTabs();
   renderPricingCards();

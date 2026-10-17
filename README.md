@@ -1,6 +1,7 @@
 # JengaFlow Solutions — Official Business Portfolio Website
 
 **Official Domain:** [https://jengaflowsolutions.tech](https://jengaflowsolutions.tech)  
+**Founder & Lead Developer:** Moses Otieno Okwany  
 **Tagline:** *We Build Digital Experiences That Grow Businesses.*
 
 ---
@@ -13,6 +14,7 @@ This is a clean, modern, zero-dependency static web application built with seman
 ├── index.html       # Primary semantic markup, SEO, OpenGraph, & Schema.org JSON-LD
 ├── style.css        # Full responsive design system, typography, & layout rules
 ├── script.js        # Centralized CONFIG, currency engine, WhatsApp integration, & form validation
+├── photo.jpg        # Profile photo of Moses Otieno Okwany (Founder & Lead Developer)
 └── README.md        # Deployment and configuration documentation
 ```
 
@@ -25,14 +27,19 @@ All contact channels, exchange rates, and pricing packages are configured in a s
 ```javascript
 const CONFIG = {
   // 1. WhatsApp Number: International format without '+' or spaces.
-  // Example for Kenya: "254712345678"
-  WHATSAPP_NUMBER: "254700000000",
+  WHATSAPP_NUMBER: "254741067333", // Phone: 0741067333
 
   // 2. Official Contact Email
-  CONTACT_EMAIL: "contact@jengaflowsolutions.tech",
+  CONTACT_EMAIL: "info@jengaflowsolutions.tech",
 
-  // 3. Optional Formspree / Backend API Endpoint
-  // If left empty "", the form will provide immediate dispatch via email client or WhatsApp
+  // 3. Location
+  LOCATION: "Kadongo, Homa Bay, Kenya & Remotely Worldwide",
+
+  // 4. Founder Photo (place your photo.jpg in the root folder, or set an external image URL)
+  FOUNDER_PHOTO_URL: "photo.jpg",
+
+  // 5. Optional Formspree / Backend API Endpoint
+  // If left empty "", the form provides direct dispatch via email client or WhatsApp
   FORMSPREE_ENDPOINT: "",
 
   // 4. Exchange Rates (Base: 1 KES)
@@ -74,8 +81,8 @@ Double-click `index.html` in your file explorer to open it in Chrome, Safari, Fi
 ```bash
 # Initialize git if not already tracked
 git init
-git add index.html style.css script.js README.md
-git commit -m "feat: complete JengaFlow Solutions business portfolio website"
+git add index.html style.css script.js photo.jpg README.md
+git commit -m "feat: complete JengaFlow Solutions business portfolio website with founder profile"
 
 # Push to your GitHub repository
 git branch -M main
@@ -103,8 +110,9 @@ git push -u origin main
 
 ## 📋 Pre-Launch Verification Checklist
 
-- [ ] **WhatsApp Number:** Update `CONFIG.WHATSAPP_NUMBER` in `script.js` with your active business phone number (format: `254XXXXXXXXX`).
-- [ ] **Contact Email:** Verify `CONFIG.CONTACT_EMAIL` matches your official mailbox (e.g., `contact@jengaflowsolutions.tech`).
+- [x] **WhatsApp Number:** Configured as `254741067333` (Phone: `0741067333`).
+- [x] **Contact Email:** Configured as `info@jengaflowsolutions.tech`.
+- [x] **Location:** Configured as `Kadongo, Homa Bay, Kenya (and remotely worldwide)`.
 - [ ] **Form Backend (Optional):** If using Formspree, create a free form at [formspree.io](https://formspree.io/) and paste the endpoint into `CONFIG.FORMSPREE_ENDPOINT`.
 - [ ] **Portfolio Links:** Verify external links open correctly in new tabs:
   - `https://gideonskenya.org`

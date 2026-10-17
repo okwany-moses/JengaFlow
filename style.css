@@ -1331,6 +1331,107 @@ button {
   line-height: 1.5;
 }
 
+/* Founder & Technical Leadership Card */
+.founder-card {
+  margin-top: 2.5rem;
+  background-color: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.founder-card:hover {
+  border-color: var(--blue-300);
+  box-shadow: var(--shadow-md);
+}
+
+@media (min-width: 640px) {
+  .founder-card {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.founder-avatar-wrap {
+  flex-shrink: 0;
+  width: 92px;
+  height: 92px;
+  position: relative;
+}
+
+.founder-photo-img {
+  width: 92px;
+  height: 92px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  object-position: top center;
+  border: 2px solid var(--white);
+  box-shadow: 0 4px 14px rgba(11, 19, 41, 0.12);
+  display: block;
+}
+
+.founder-avatar-icon {
+  width: 92px;
+  height: 92px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--blue-600) 100%);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  box-shadow: var(--shadow-sm);
+}
+
+.founder-info {
+  flex-grow: 1;
+}
+
+.founder-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue-600);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.founder-name {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0.25rem;
+}
+
+.founder-role {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--slate-600);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.founder-bio {
+  font-size: 0.9375rem;
+  color: var(--slate-600);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.founder-direct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 /* ==========================================================================
    Process Section (From Idea to Online — 4 Steps)
    ========================================================================== */

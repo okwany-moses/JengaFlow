@@ -21,6 +21,9 @@ const CONFIG = {
   // Business Phone display format
   PHONE_DISPLAY: "+254 741 067 333",
 
+  // Official Brand Logo
+  LOGO_URL: "logo.jpg", // Path or hosted URL to official JengaFlow logo
+
   // Founder & Technical Lead
   FOUNDER_NAME: "Moses Otieno Okwany",
   FOUNDER_ROLE: "Founder & Lead Developer",
@@ -891,12 +894,144 @@ function initDynamicYear() {
 }
 
 /**
- * Founder Photo Initializer
+ * Founder Photo Initializer (Loads 100% authentic original photo without alteration)
  */
 function initFounderPhoto() {
   const img = document.getElementById("founder-photo-img");
-  if (img && CONFIG.FOUNDER_PHOTO_URL) {
-    img.src = CONFIG.FOUNDER_PHOTO_URL;
+  const fallback = document.getElementById("founder-avatar-fallback");
+  const input = document.getElementById("founder-photo-input");
+
+  if (!img) return;
+
+  // 1. Check if user already loaded their exact original photo into browser storage
+  try {
+    const saved = localStorage.getItem("jengaflow_founder_photo");
+    if (saved) {
+      img.src = saved;
+      img.style.display = "block";
+      if (fallback) fallback.style.display = "none";
+    } else if (CONFIG.FOUNDER_PHOTO_URL) {
+      img.src = CONFIG.FOUNDER_PHOTO_URL;
+    }
+  } catch (e) {
+    if (CONFIG.FOUNDER_PHOTO_URL) img.src = CONFIG.FOUNDER_PHOTO_URL;
+  }
+
+  // 2. Handle image loading states
+  img.onerror = () => {
+    // If not loaded and not a data URI, show initials fallback
+    if (!img.src.startsWith("data:")) {
+      img.style.display = "none";
+      if (fallback) fallback.style.display = "flex";
+    }
+  };
+
+  img.onload = () => {
+    img.style.display = "block";
+    if (fallback) fallback.style.display = "none";
+  };
+
+  // 3. Direct unedited file selection: reads exact original file bytes with zero AI changes
+  if (input) {
+    input.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const originalDataUrl = event.target.result;
+          img.src = originalDataUrl;
+          img.style.display = "block";
+          if (fallback) fallback.style.display = "none";
+          try {
+            localStorage.setItem("jengaflow_founder_photo", originalDataUrl);
+          } catch (err) {}
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+}
+
+/**
+ * Official Logo Initializer (Loads 100% authentic original logo without alteration)
+ */
+function initBrandLogo() {
+  const headerLogo = document.getElementById("brand-logo-img");
+  const footerLogo = document.getElementById("footer-logo-img");
+  const headerFallback = document.getElementById("brand-icon-fallback");
+  const footerFallback = document.getElementById("footer-icon-fallback");
+  const input = document.getElementById("brand-logo-input");
+
+  function setLogo(src) {
+    if (headerLogo) {
+      headerLogo.src = src;
+      headerLogo.style.display = "block";
+      if (headerFallback) headerFallback.style.display = "none";
+    }
+    if (footerLogo) {
+      footerLogo.src = src;
+      footerLogo.style.display = "block";
+      if (footerFallback) footerFallback.style.display = "none";
+    }
+  }
+
+  // 1. Check browser local storage
+  try {
+    const saved = localStorage.getItem("jengaflow_brand_logo");
+    if (saved) {
+      setLogo(saved);
+    } else if (CONFIG.LOGO_URL) {
+      setLogo(CONFIG.LOGO_URL);
+    }
+  } catch (e) {
+    if (CONFIG.LOGO_URL) setLogo(CONFIG.LOGO_URL);
+  }
+
+  // 2. Error fallbacks if logo.jpg isn't accessible yet
+  if (headerLogo) {
+    headerLogo.onerror = () => {
+      if (!headerLogo.src.startsWith("data:")) {
+        headerLogo.style.display = "none";
+        if (headerFallback) headerFallback.style.display = "flex";
+      }
+    };
+  }
+  if (footerLogo) {
+    footerLogo.onerror = () => {
+      if (!footerLogo.src.startsWith("data:")) {
+        footerLogo.style.display = "none";
+        if (footerFallback) footerFallback.style.display = "flex";
+      }
+    };
+  }
+
+  // 3. Direct unedited file selection: reads exact original file bytes with zero AI changes
+  if (input) {
+    input.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const originalDataUrl = event.target.result;
+          setLogo(originalDataUrl);
+          try {
+            localStorage.setItem("jengaflow_brand_logo", originalDataUrl);
+          } catch (err) {}
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    const headerWrap = document.querySelector(".brand-logo-wrap");
+    if (headerWrap) {
+      headerWrap.style.cursor = "pointer";
+      headerWrap.title = "Click to set official logo file (286812.jpg)";
+      headerWrap.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        input.click();
+      });
+    }
   }
 }
 
@@ -905,6 +1040,7 @@ function initFounderPhoto() {
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   initDynamicYear();
+  initBrandLogo();
   initFounderPhoto();
   initCurrencySelector();
   initPricingTabs();

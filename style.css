@@ -318,9 +318,39 @@ button {
   flex-shrink: 0;
 }
 
+.brand-logo-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--navy-900);
+  border: 1px solid var(--slate-200);
+  display: block;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.brand-link:hover .brand-logo-img {
+  transform: scale(1.05);
+}
+
+.footer-brand .brand-logo-img {
+  width: 34px;
+  height: 34px;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 .brand-icon {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1359,14 +1389,16 @@ button {
 
 .founder-avatar-wrap {
   flex-shrink: 0;
-  width: 92px;
-  height: 92px;
+  width: 96px;
+  height: 96px;
   position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .founder-photo-img {
-  width: 92px;
-  height: 92px;
+  width: 96px;
+  height: 96px;
   border-radius: var(--radius-md);
   object-fit: cover;
   object-position: top center;
@@ -1376,18 +1408,50 @@ button {
 }
 
 .founder-avatar-icon {
-  width: 92px;
-  height: 92px;
+  width: 96px;
+  height: 96px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--navy-900) 0%, var(--blue-600) 100%);
   color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   box-shadow: var(--shadow-sm);
+}
+
+.founder-photo-upload-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(11, 19, 41, 0.65);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.founder-avatar-wrap:hover .founder-photo-upload-overlay,
+.founder-avatar-wrap:focus-within .founder-photo-upload-overlay {
+  opacity: 1;
+}
+
+.founder-photo-upload-overlay svg {
+  width: 18px;
+  height: 18px;
+}
+
+.founder-photo-upload-overlay span {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .founder-info {

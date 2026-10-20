@@ -4,56 +4,10 @@ import fs from 'fs';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-function assetSavePlugin() {
+function enquiryPlugin() {
   return {
-    name: 'asset-save-plugin',
+    name: 'enquiry-plugin',
     configureServer(server: any) {
-      server.middlewares.use('/api/save-asset', (req: any, res: any) => {
-        if (req.method !== 'POST') {
-          res.statusCode = 405;
-          res.end(JSON.stringify({ error: 'Method not allowed' }));
-          return;
-        }
-        let body = '';
-        req.on('data', (chunk: any) => {
-          body += chunk;
-        });
-        req.on('end', () => {
-          try {
-            const { filename, base64 } = JSON.parse(body);
-            if (!filename || !base64) {
-              res.statusCode = 400;
-              res.end(JSON.stringify({ error: 'Missing filename or base64' }));
-              return;
-            }
-            const cleanName = path.basename(filename);
-            const rawBase64 = base64.replace(/^data:image\/\w+;base64,/, '');
-            const buffer = Buffer.from(rawBase64, 'base64');
-
-            const publicDir = path.resolve(__dirname, 'public');
-            if (!fs.existsSync(publicDir)) {
-              fs.mkdirSync(publicDir, { recursive: true });
-            }
-
-            fs.writeFileSync(path.resolve(__dirname, cleanName), buffer);
-            fs.writeFileSync(path.resolve(publicDir, cleanName), buffer);
-
-            if (cleanName === '286812.jpg' || cleanName === 'logo.jpg') {
-              fs.writeFileSync(path.resolve(__dirname, '286812.jpg'), buffer);
-              fs.writeFileSync(path.resolve(publicDir, '286812.jpg'), buffer);
-              fs.writeFileSync(path.resolve(__dirname, 'logo.jpg'), buffer);
-              fs.writeFileSync(path.resolve(publicDir, 'logo.jpg'), buffer);
-            }
-
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ success: true, saved: cleanName }));
-          } catch (err: any) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ error: err.message }));
-          }
-        });
-      });
-
       server.middlewares.use('/api/send-enquiry', (req: any, res: any) => {
         if (req.method !== 'POST') {
           res.statusCode = 405;
@@ -107,7 +61,7 @@ function assetSavePlugin() {
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), assetSavePlugin()],
+    plugins: [react(), tailwindcss(), enquiryPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

@@ -8,6 +8,82 @@
  * Update the settings below to configure your business contact details,
  * currency conversion rates, and package information in one place.
  */
+/**
+ * Global Lockout & Cache Purge
+ * Ensures no visitor can upload, replace, or alter the logo or founder photo.
+ * Cleanses any stale service workers, client-side caches, or legacy storage keys.
+ */
+(function lockAndPurgeUploads() {
+  if (typeof window === "undefined") return;
+
+  // 1. Prototype Lockout: Prevent any programmatic input[type="file"].click() execution
+  try {
+    const originalClick = HTMLInputElement.prototype.click;
+    HTMLInputElement.prototype.click = function() {
+      if (this && this.type === "file") {
+        console.warn("File chooser trigger blocked.");
+        return;
+      }
+      return originalClick.apply(this, arguments);
+    };
+  } catch (e) {}
+
+  // 2. Clear legacy client-side storage keys from previous upload tests
+  try {
+    localStorage.removeItem("jengaflow_founder_photo");
+    localStorage.removeItem("jengaflow_logo");
+    localStorage.removeItem("founder_photo");
+    localStorage.removeItem("brand_logo");
+    sessionStorage.clear();
+  } catch (e) {}
+
+  // 3. Unregister any legacy Service Workers to prevent stale bundles from executing
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(reg => reg.unregister());
+    }).catch(() => {});
+  }
+
+  // 4. Purge any file inputs, upload overlays, or drag-drop affordances
+  const purgeUploadElements = () => {
+    document.querySelectorAll('input[type="file"], .founder-photo-upload-overlay, .brand-logo-upload-overlay, .photo-upload-overlay, [title*="upload"], [title*="update photo"]').forEach(el => {
+      el.remove();
+    });
+    const founderContainer = document.getElementById("founder-avatar-container");
+    if (founderContainer) {
+      founderContainer.removeAttribute("title");
+      founderContainer.style.cursor = "default";
+      founderContainer.style.pointerEvents = "none";
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", purgeUploadElements);
+  } else {
+    purgeUploadElements();
+  }
+
+  // 5. Watch DOM continuously: If any script tries to inject a file input or overlay, remove it instantly
+  try {
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll('input[type="file"], .founder-photo-upload-overlay, .brand-logo-upload-overlay, .photo-upload-overlay').forEach(el => el.remove());
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (e) {}
+
+  // 6. Capture-phase click interceptor: block any click on founder avatar container or images
+  window.addEventListener("click", (e) => {
+    if (e.target && e.target.closest && e.target.closest("#founder-avatar-container, .founder-avatar-wrap, #founder-photo-img")) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }
+  }, true);
+
+  // 7. Prevent file drag & drop anywhere on the page
+  window.addEventListener("dragover", (e) => e.preventDefault(), false);
+  window.addEventListener("drop", (e) => e.preventDefault(), false);
+})();
 
 const CONFIG = {
   // BUSINESS CONTACT DETAILS
@@ -1023,30 +1099,24 @@ function initDynamicYear() {
  */
 function initFounderPhoto() {
   const img = document.getElementById("founder-photo-img");
-  const fallback = document.getElementById("founder-avatar-fallback");
+  const container = document.getElementById("founder-avatar-container");
 
-  if (!img) return;
+  if (container) {
+    container.removeAttribute("title");
+    container.style.cursor = "default";
+    container.style.pointerEvents = "none";
+    container.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  }
 
-  img.setAttribute("draggable", "false");
-
-  img.onload = () => {
+  if (img) {
+    img.setAttribute("draggable", "false");
+    img.style.pointerEvents = "none";
+    img.style.userSelect = "none";
+    img.style.cursor = "default";
     img.style.display = "block";
-    if (fallback) fallback.style.display = "none";
-  };
-
-  img.onerror = () => {
-    // If inline data fails for any reason, try relative path photo.jpg
-    if (!img.src.endsWith("photo.jpg")) {
-      img.src = "./photo.jpg";
-    } else {
-      img.style.display = "none";
-      if (fallback) fallback.style.display = "flex";
-    }
-  };
-
-  if (img.complete && img.naturalWidth > 0) {
-    img.style.display = "block";
-    if (fallback) fallback.style.display = "none";
   }
 }
 
@@ -1057,47 +1127,21 @@ function initFounderPhoto() {
 function initBrandLogo() {
   const headerLogo = document.getElementById("brand-logo-img");
   const footerLogo = document.getElementById("footer-logo-img");
-  const headerFallback = document.getElementById("brand-icon-fallback");
-  const footerFallback = document.getElementById("footer-icon-fallback");
 
   [headerLogo, footerLogo].forEach(logo => {
     if (logo) {
       logo.setAttribute("draggable", "false");
-      if (logo.complete && logo.naturalWidth > 0) {
-        logo.style.display = "block";
-      }
+      logo.style.pointerEvents = "none";
+      logo.style.userSelect = "none";
+      logo.style.cursor = "default";
+      logo.style.display = "block";
     }
   });
 
-  if (headerLogo && headerFallback) {
-    headerLogo.onload = () => {
-      headerLogo.style.display = "block";
-      headerFallback.style.display = "none";
-    };
-    headerLogo.onerror = () => {
-      if (!headerLogo.src.endsWith("286812.jpg") && !headerLogo.src.endsWith("logo.jpg")) {
-        headerLogo.src = "./286812.jpg";
-      } else {
-        headerLogo.style.display = "none";
-        headerFallback.style.display = "flex";
-      }
-    };
-  }
-
-  if (footerLogo && footerFallback) {
-    footerLogo.onload = () => {
-      footerLogo.style.display = "block";
-      footerFallback.style.display = "none";
-    };
-    footerLogo.onerror = () => {
-      if (!footerLogo.src.endsWith("286812.jpg") && !footerLogo.src.endsWith("logo.jpg")) {
-        footerLogo.src = "./286812.jpg";
-      } else {
-        footerLogo.style.display = "none";
-        footerFallback.style.display = "flex";
-      }
-    };
-  }
+  document.querySelectorAll(".brand-logo-wrap, #brand-logo-img, #footer-logo-img").forEach(el => {
+    el.removeAttribute("title");
+    el.style.pointerEvents = "none";
+  });
 }
 
 /* ==========================================================================

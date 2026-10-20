@@ -1396,6 +1396,9 @@ button {
   position: relative;
   border-radius: var(--radius-md);
   overflow: hidden;
+  cursor: default !important;
+  pointer-events: none !important;
+  user-select: none !important;
 }
 
 .founder-photo-img {
@@ -1407,9 +1410,28 @@ button {
   border: 2px solid var(--white);
   box-shadow: 0 4px 14px rgba(11, 19, 41, 0.12);
   display: block;
-  user-select: none;
-  -webkit-user-drag: none;
-  pointer-events: none;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+/* Absolute lockout: suppress any file inputs or upload overlays across the entire app */
+input[type="file"],
+.founder-photo-upload-overlay,
+.brand-logo-upload-overlay,
+.photo-upload-overlay,
+[data-action="upload-photo"],
+[data-action="upload-logo"] {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
 }
 
 .founder-avatar-icon {
